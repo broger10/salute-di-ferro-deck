@@ -324,19 +324,15 @@
                 font-size: 0.65rem;
             }
 
-            /* Scrollable tables */
-            .data-table {
-                display: block;
+            /* Scrollable tables — wrap in scroll container via JS */
+            .table-scroll-wrapper {
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
+                margin: 0 -0.25rem;
+                padding: 0 0.25rem;
             }
-            .data-table thead,
-            .data-table tbody,
-            .data-table tr {
-                display: table;
-                width: max-content;
-                min-width: 100%;
-                table-layout: auto;
+            .table-scroll-wrapper .data-table {
+                min-width: 420px;
             }
             .data-table th, .data-table td {
                 padding: 0.4rem 0.5rem;
@@ -1474,11 +1470,24 @@
         window.addEventListener('resize', updateMobileNav);
     }
 
+    // Wrap tables in scroll container on mobile
+    function wrapTables() {
+        if (window.innerWidth > 768) return;
+        document.querySelectorAll('.data-table').forEach(table => {
+            if (table.parentElement.classList.contains('table-scroll-wrapper')) return;
+            const wrapper = document.createElement('div');
+            wrapper.className = 'table-scroll-wrapper';
+            table.parentNode.insertBefore(wrapper, table);
+            wrapper.appendChild(table);
+        });
+    }
+
     // Init chart, Lucide icons, and mobile nav
     window.addEventListener('DOMContentLoaded', () => {
         if (typeof lucide !== 'undefined') lucide.createIcons();
         initChart();
         setupMobileNav();
+        wrapTables();
     });
 </script>
 
