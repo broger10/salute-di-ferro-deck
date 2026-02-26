@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salute Di Ferro — Analisi di Mercato & Prospettive</title>
+    <meta name="description" content="Analisi di mercato e prospettive future per Salute Di Ferro">
+
+    <!-- Fonts: Plus Jakarta Sans (headings) + Inter (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        heading: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                        body: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        navy: { DEFAULT: '#0B1D2E', light: '#132E47' },
+                        steel: '#1E3A5F',
+                        gold: { DEFAULT: '#C8963E', light: '#E8C17A', dark: '#A67B2E' },
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <style>
+        /* ═══════════════════════════════════
+           BASE
+           ═══════════════════════════════════ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #0B1D2E;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        }
+
+        /* ═══════════════════════════════════
+           SLIDE SYSTEM
+           ═══════════════════════════════════ */
+        #deck { position: relative; width: 100vw; height: 100vh; }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0.97);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+            z-index: 10;
+        }
+
+        .slide-inner {
+            width: 100%;
+            max-width: 1100px;
+            padding: 2.5rem 2.5rem;
+            margin: 0 auto;
+        }
+
+        /* ═══════════════════════════════════
+           REVEAL ANIMATIONS
+           ═══════════════════════════════════ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide.active .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide.active .reveal:nth-child(1) { transition-delay: 0.1s; }
+        .slide.active .reveal:nth-child(2) { transition-delay: 0.2s; }
+        .slide.active .reveal:nth-child(3) { transition-delay: 0.3s; }
+        .slide.active .reveal:nth-child(4) { transition-delay: 0.4s; }
+        .slide.active .reveal:nth-child(5) { transition-delay: 0.5s; }
+        .slide.active .reveal:nth-child(6) { transition-delay: 0.6s; }
+
+        /* ═══════════════════════════════════
+           CARDS
+           ═══════════════════════════════════ */
+        .card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 1.25rem;
+            backdrop-filter: blur(12px);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(200, 150, 62, 0.3);
+        }
+
+        /* ═══════════════════════════════════
+           SOURCE TAGS
+           ═══════════════════════════════════ */
+        .source-tag {
+            display: inline-block;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            background: rgba(200, 150, 62, 0.15);
+            color: #E8C17A;
+            border: 1px solid rgba(200, 150, 62, 0.25);
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .source-tag.peer-reviewed {
+            background: rgba(52, 211, 153, 0.12);
+            color: #6ee7b7;
+            border-color: rgba(52, 211, 153, 0.25);
+        }
+
+        /* ═══════════════════════════════════
+           DATA TABLE
+           ═══════════════════════════════════ */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th {
+            text-align: left;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #C8963E;
+            border-bottom: 1px solid rgba(200, 150, 62, 0.3);
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            font-weight: 600;
+        }
+        .data-table td {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .data-table tr:hover td {
+            background: rgba(255,255,255,0.02);
+        }
+
+        /* ═══════════════════════════════════
+           NAVIGATION
+           ═══════════════════════════════════ */
+        #nav {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(11, 29, 46, 0.85);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(12px);
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .dot.active {
+            background: #C8963E;
+            box-shadow: 0 0 8px rgba(200, 150, 62, 0.5);
+        }
+        .dot:hover { background: rgba(200, 150, 62, 0.5); }
+
+        #slide-counter {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 2rem;
+            z-index: 100;
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 0.1em;
+        }
+
+        /* ═══════════════════════════════════
+           CHART CONTAINER
+           ═══════════════════════════════════ */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        /* ═══════════════════════════════════
+           SWOT GRID
+           ═══════════════════════════════════ */
+        .swot-cell {
+            padding: 1rem;
+            border-radius: 10px;
+            min-height: 150px;
+        }
+        .swot-cell h4 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        .swot-cell li {
+            font-size: 0.7rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        /* ═══════════════════════════════════
+           PROGRESS BAR
+           ═══════════════════════════════════ */
+        .progress-bar {
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255,255,255,0.08);
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ═══════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════ */
+        @media (max-width: 768px) {
+            html, body {
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+
+            #deck {
+                height: auto;
+                min-height: 100vh;
+            }
+
+            .slide {
+                position: relative;
+                display: none;
+                opacity: 1;
+                transform: none;
+                transition: none;
+                overflow: visible;
+                min-height: 100vh;
+                height: auto;
+                align-items: flex-start;
+            }
+            .slide.active {
+                display: flex;
+                transform: none;
+            }
+
+            .slide-inner {
+                padding: 1.5rem 1rem 5rem;
+                max-width: 100%;
+            }
+
+            /* Stack all grids to single column */
+            .grid-cols-2,
+            .md\:grid-cols-2,
+            .md\:grid-cols-3,
+            .md\:grid-cols-4,
+            .grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* SWOT grid: keep 2 columns but with less min-height */
+            .slide[data-slide="10"] .grid {
+                grid-template-columns: 1fr 1fr !important;
+            }
+            .swot-cell {
+                min-height: auto;
+                padding: 0.75rem;
+            }
+            .swot-cell li {
+                font-size: 0.65rem;
+            }
+
+            /* Scrollable tables */
+            .data-table {
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .data-table thead,
+            .data-table tbody,
+            .data-table tr {
+                display: table;
+                width: 100%;
+                table-layout: fixed;
+            }
+            .data-table th, .data-table td {
+                padding: 0.4rem 0.5rem;
+                font-size: 0.65rem;
+                white-space: nowrap;
+            }
+
+            /* Bigger touch targets for nav */
+            #nav {
+                bottom: 0.75rem;
+                padding: 8px 16px;
+                gap: 10px;
+            }
+            .dot {
+                width: 10px;
+                height: 10px;
+            }
+
+            #slide-counter {
+                bottom: 0.75rem;
+                right: 1rem;
+                font-size: 0.65rem;
+            }
+
+            /* Typography adjustments */
+            h2 {
+                font-size: 1.5rem !important;
+            }
+            .card {
+                padding: 1rem;
+            }
+
+            /* Cover slide adjustments */
+            .slide[data-slide="0"] h1 {
+                font-size: 1.75rem !important;
+            }
+
+            /* Chart container */
+            .chart-container {
+                height: 220px !important;
+                margin-bottom: 1rem;
+            }
+
+            /* Roadmap timeline */
+            .flex.gap-4 {
+                gap: 0.5rem;
+            }
+            .flex-shrink-0.w-20 {
+                width: 3.5rem;
+            }
+
+            /* TAM/SAM/SOM circles */
+            .w-24.h-24 {
+                width: 5rem;
+                height: 5rem;
+            }
+            .w-24.h-24 p {
+                font-size: 0.9rem !important;
+            }
+
+            /* Source tags wrap */
+            .flex-wrap {
+                gap: 4px !important;
+            }
+
+            /* Reveal animations: instant on mobile */
+            .reveal {
+                transition-delay: 0s !important;
+                transition-duration: 0.3s !important;
+            }
+        }
+
+        /* Small phones */
+        @media (max-width: 380px) {
+            .slide-inner { padding: 1.25rem 0.75rem 5rem; }
+            .slide[data-slide="10"] .grid {
+                grid-template-columns: 1fr !important;
+            }
+            .card { padding: 0.75rem; }
+        }
+    </style>
+</head>
+<body class="bg-navy text-white">
+
+<div id="deck">
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 1 — COVER
+         ═══════════════════════════════════════════════════════ -->
+    <div class="slide active" data-slide="0">
+        <div class="slide-inner text-center">
+            <div class="reveal mb-3">
+                <span class="inline-block px-4 py-1.5 rounded-full text-xs font-medium tracking-widest uppercase" style="background: rgba(200,150,62,0.12); color: #E8C17A; border: 1px solid rgba(200,150,62,0.25);">Febbraio 2026 — Confidenziale</span>
+            </div>
+            <h1 class="reveal font-heading text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
+                <span class="text-gold">Analisi di Mercato</span><br>
+                <span class="text-white/90">&amp; Prospettive Future</span>
+            </h1>
+            <div class="reveal mb-6">
+                <div class="flex items-center justify-center gap-3 mb-2">
+                    <div class="h-px w-12 bg-gold/30"></div>
+                    <i data-lucide="shield-check" class="w-5 h-5 text-gold"></i>
+                    <div class="h-px w-12 bg-gold/30"></div>
+                </div>
+                <p class="text-lg text-white/70 font-heading">Salute Di Ferro</p>
+                <p class="text-sm text-white/40 mt-1">Il primo marketplace sanitario verticale per atleti di forza in Italia</p>
+            </div>
+            <div class="reveal flex flex-wrap justify-center gap-3 mt-6">
+                <div class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-center">
+                    <p class="text-xs text-gold font-semibold font-heading">40+ fonti</p>
+                    <p class="text-[0.6rem] text-white/40">verificate</p>
+                </div>
+                <div class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-center">
+                    <p class="text-xs text-gold font-semibold font-heading">21 studi</p>
+                    <p class="text-[0.6rem] text-white/40">peer-reviewed</p>
+                </div>
+                <div class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-center">
+                    <p class="text-xs text-gold font-semibold font-heading">7 report</p>
+                    <p class="text-[0.6rem] text-white/40">market research</p>
+                </div>
+                <div class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-center">
+                    <p class="text-xs text-gold font-semibold font-heading">5 fonti</p>
+                    <p class="text-[0.6rem] text-white/40">istituzionali EU</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 2 — DIGITAL HEALTH MARKET
+         ═══════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="1">
+        <div class="slide-inner">
+            <p class="reveal text-xs text-gold/70 uppercase tracking-widest font-heading font-semibold mb-1">01 — Contesto di Mercato</p>
+            <h2 class="reveal font-heading text-2xl md:text-3xl font-bold text-white mb-1">Il Mercato Digital Health</h2>
+            <p class="reveal text-sm text-white/50 mb-5">Crescita globale sostenuta a doppia cifra, con l'Italia in fase di accelerazione</p>
+
+            <div class="reveal mb-5">
+                <h3 class="font-heading text-xs uppercase text-gold tracking-wider mb-3 font-semibold">
+                    <i data-lucide="globe" class="w-3.5 h-3.5 inline-block mr-1.5 -mt-0.5"></i>
+                    Mercato Globale — $420-490B (2025-2026)
+                </h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Fonte</th>
+                            <th>Valore 2025</th>
+                            <th>CAGR</th>
+                            <th>Proiezione</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Fortune Business Insights</td><td class="text-white font-medium">$427.2B</td><td>21.6%</td><td>—</td></tr>
+                        <tr><td>Precedence Research</td><td class="text-white font-medium">$420.1B</td><td>11.7%</td><td>—</td></tr>
+                        <tr><td>GM Insights</td><td class="text-white font-medium">$387.8B</td><td>21.2%</td><td>$2.19T (2034)</td></tr>
+                        <tr><td>Markets and Markets</td><td class="text-white font-medium">$199.1B</td><td>23.6%</td><td>— (2030)</td></tr>
+                    </tbody>
+                </table>
+                <p class="text-[0.6rem] text-white/30 mt-2 italic">Le variazioni riflettono diverse metodologie di segmentazione. Tutte concordano su crescita robusta a doppia cifra.</p>
+            </div>
+
+            <div class="reveal">
+                <h3 class="font-heading text-xs uppercase text-gold tracking-wider mb-3 font-semibold">
+                    <i data-lucide="map-pin" class="w-3.5 h-3.5 inline-block mr-1.5 -mt-0.5"></i>
+                    Italia — Focus
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="card text-center">
+                        <p class="text-2xl font-heading font-bold text-gold">$7.38B</p>
+                        <p class="text-xs text-white/60 mt-1">Digital Health Italia 2025</p>
+                        <p class="text-[0.6rem] text-white/30">→ $26.5B entro 2035 (CAGR 13.6%)</p>
+                        <span class="source-tag mt-2">Market Research Future</span>
+                    </div>
+                    <div class="card text-center">
+                        <p class="text-2xl font-heading font-bold text-gold">$10.2B</p>
+                        <p class="text-xs text-white/60 mt-1">Telemedicina Italia 2030</p>
+                        <p class="text-[0.6rem] text-white/30">CAGR 18.2%</p>
+                        <span class="source-tag mt-2">Grand View Research</span>
+                    </div>
+                    <div class="card text-center">
+                        <p class="text-2xl font-heading font-bold text-gold">€200M</p>
+                        <p class="text-xs text-white/60 mt-1">PNRR Telemedicina</p>
+                        <p class="text-[0.6rem] text-white/30">PNT operativa da fine 2025</p>
+                        <span class="source-tag mt-2">Governo Italiano</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 3 — FITNESS INDUSTRY
+         ═══════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="2">
+        <div class="slide-inner">
+            <p class="reveal text-xs text-gold/70 uppercase tracking-widest font-heading font-semibold mb-1">02 — Industria Fitness</p>
+            <h2 class="reveal font-heading text-2xl md:text-3xl font-bold text-white mb-1">Il Mercato Fitness</h2>
+            <p class="reveal text-sm text-white/50 mb-5">Italia e Europa ai massimi storici post-pandemia</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="reveal">
+                    <h3 class="font-heading text-xs uppercase text-gold tracking-wider mb-3 font-semibold">
+                        <i data-lucide="flag" class="w-3.5 h-3.5 inline-block mr-1.5 -mt-0.5"></i>
+                        Italia
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="card">
+                            <div class="flex items-baseline justify-between">
+                                <p class="text-xl font-heading font-bold text-white">€3.1 mld</p>
+                                <span class="text-xs text-emerald-400 font-medium">+7-12% YoY</span>
+                            </div>
+                            <p class="text-xs text-white/50 mt-1">Valore mercato fitness Italia 2024</p>
+                            <span class="source-tag mt-2">Il Sole 24 Ore</span>
+                        </div>
+                        <div class="card">
+                            <p class="text-xl font-heading font-bold text-white">~5 milioni</p>
+                            <p class="text-xs text-white/50 mt-1">Iscritti in palestra (+7.5% annuo)</p>
+                            <span class="source-tag mt-2">Il Sole 24 Ore / TrueNumbers</span>
+                        </div>
+                        <div class="card">
+                            <p class="text-xl font-heading font-bold text-white">21.5M</p>
+                            <p class="text-xs text-white/50 mt-1">Praticanti sportivi (37.5% popolazione)</p>
+                            <span class="source-tag mt-2">ISTAT 2024</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <h3 class="font-heading text-xs uppercase text-gold tracking-wider mb-3 font-semibold">
+                        <i data-lucide="globe-2" class="w-3.5 h-3.5 inline-block mr-1.5 -mt-0.5"></i>
+                        Europa
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="card">
+                            <div class="flex items-baseline justify-between">
+                                <p class="text-xl font-heading font-bold text-white">€36 mld</p>
+                                <span class="text-xs text-emerald-400 font-medium">CAGR 8.2%</span>
+                            </div>
+                            <p class="text-xs text-white/50 mt-1">Valore mercato fitness Europa</p>
+                            <span class="source-tag mt-2">EuropeActive / Deloitte</span>
+                        </div>
+                        <div class="card">
+                            <p class="text-xl font-heading font-bold text-white">71M+</p>
+                            <p class="text-xs text-white/50 mt-1">Iscritti a fitness club in Europa</p>
+                            <p class="text-[0.6rem] text-white/30 mt-1">Obiettivo settore: 100M entro il 2030</p>
+                            <span class="source-tag mt-2">Health & Fitness Association</span>
+                        </div>
+                        <div class="card">
+                            <p class="text-xl font-heading font-bold text-white">&gt;50%</p>
+                            <p class="text-xs text-white/50 mt-1">Europei attivi frequenta regolarmente un fitness club (2025 — prima volta)</p>
+                            <span class="source-tag mt-2">Athletech News</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 4 — TARGET & AAS PREVALENCE
+         ═══════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="3">
+        <div class="slide-inner">
+            <p class="reveal text-xs text-gold/70 uppercase tracking-widest font-heading font-semibold mb-1">03 — Target Addressable</p>
+            <h2 class="reveal font-heading text-2xl md:text-3xl font-bold text-white mb-1">Chi Sono e Quanti Sono</h2>
+            <p class="reveal text-sm text-white/50 mb-5">Dimensionamento del target primario in Italia</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="reveal">
+                    <h3 class="font-heading text-xs uppercase text-gold tracking-wider mb-3 font-semibold">Segmentazione Target Italia</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Segmento</th><th>Stima</th><th>Base</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Iscritti palestre</td><td class="text-white font-medium">~5M</td><td class="text-white/40">Il Sole 24 Ore</td></tr>
+                            <tr><td>Praticanti seri (&gt;3x/sett)</td><td class="text-white font-medium">1.5-2M</td><td class="text-white/40">30-40% iscritti</td></tr>
+                            <tr><td>BB / PL / Strength dedicati</td><td class="text-white font-medium">300-500K</td><td class="text-white/40">Benchmark EU</td></tr>
+                            <tr><td>Utilizzatori AAS</td><td class="text-white font-medium">200-320K</td><td class="text-white/40">6.4% maschi (Sagoe 2014)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="reveal">
+                    <h3 class="font-heading text-xs uppercase text-gold tracking-wider mb-3 font-semibold">Prevalenza AAS — Dati Scientifici</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Contesto</th><th>%</th><th>Fonte</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Popolazione generale</td><td class="text-white font-medium">3.3%</td><td class="text-white/40">Sagoe 2014</td></tr>
+                            <tr><td>Maschi globale</td><td class="text-white font-medium">6.4%</td><td class="text-white/40">Sagoe 2014</td></tr>
+                            <tr><td>Europa (media)</td><td class="text-white font-medium">3.8%</td><td class="text-white/40">Meta-analisi</td></tr>
+                            <tr><td>Sportivi ricreativi gym</td><td class="text-amber-400 font-bold">18.4%</td><td class="text-white/40">Meta-analisi</td></tr>
+                            <tr><td>Palestre BB-oriented</td><td class="text-amber-400 font-bold">30-50%</td><td class="text-white/40">ScienceDirect 2025</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="reveal mt-5 card" style="border-color: rgba(200, 150, 62, 0.2);">
+                <div class="flex items-start gap-3">
+                    <i data-lucide="alert-triangle" class="w-4 h-4 text-gold flex-shrink-0 mt-0.5"></i>
+                    <div>
+                        <p class="text-xs text-white/80"><strong class="text-gold">Dato chiave</strong>: La prevalenza AAS tra sportivi ricreativi (18.4%) è <strong>più alta</strong> che tra atleti competitivi (13.4%). La grande maggioranza usa AAS per motivi estetici, non competitivi (Sagoe et al., 2014).</p>
+                        <div class="flex gap-2 mt-2">
+                            <span class="source-tag peer-reviewed">Annals of Epidemiology</span>
+                            <span class="source-tag peer-reviewed">BMC Public Health 2024</span>
+                            <span class="source-tag peer-reviewed">ScienceDirect 2025</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 5 — SCIENTIFIC VALIDATION: CARDIAC RISK
+         ═══════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="4">
+        <div class="slide-inner">
+            <p class="reveal text-xs text-gold/70 uppercase tracking-widest font-heading font-semibold mb-1">04 — Validazione Scientifica</p>
+            <h2 class="reveal font-heading text-2xl md:text-3xl font-bold text-white mb-1">Rischio Cardiovascolare</h2>
+            <p class="reveal text-sm text-white/50 mb-5">10+ studi peer-reviewed (2020-2025) confermano il bisogno clinico</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                <div class="reveal card text-center">
+                    <p class="text-3xl font-heading font-extrabold text-red-400">5×</p>
+                    <p class="text-xs text-white/60 mt-1">Rischio SCD nei BB professionisti vs amatoriali</p>
+                    <p class="text-[0.6rem] text-white/30 mt-1">n=20,286 atleti IFBB, follow-up 8 anni</p>
+                    <span class="source-tag peer-reviewed mt-2">European Heart J. 2025</span>
+                </div>
+                <div class="reveal card text-center">
+                    <p class="text-3xl font-heading font-extrabold text-red-400">2.81×</p>
+                    <p class="text-xs text-white/60 mt-1">Hazard ratio mortalità AAS users vs controllo</p>
+                    <p class="text-[0.6rem] text-white/30 mt-1">n=1,189 + 59,450 controlli danesi</p>
+                    <span class="source-tag peer-reviewed mt-2">JAMA 2024</span>
+                </div>
+                <div class="reveal card text-center">
+                    <p class="text-3xl font-heading font-extrabold text-red-400">3.64×</p>
+                    <p class="text-xs text-white/60 mt-1">Rischio morte innaturale AAS users</p>
+                    <p class="text-[0.6rem] text-white/30 mt-1">Stessa coorte (incidenti, suicidi)</p>
+                    <span class="source-tag peer-reviewed mt-2">JAMA 2024</span>
+                </div>
+            </div>
+
+            <div class="reveal card mb-3">
+                <h3 class="font-heading text-xs uppercase text-gold tracking-wider mb-2 font-semibold">Meccanismi Patologici Documentati</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-center">
+                    <div class="p-2 rounded-lg bg-red-500/10"><p class="text-xs text-red-300 font-medium">Ipertrofia ventricolare</p></div>
+                    <div class="p-2 rounded-lg bg-red-500/10"><p class="text-xs text-red-300 font-medium">Fibrosi miocardica</p></div>
+                    <div class="p-2 rounded-lg bg-red-500/10"><p class="text-xs text-red-300 font-medium">Aterosclerosi accelerata</p></div>
+                    <div class="p-2 rounded-lg bg-red-500/10"><p class="text-xs text-red-300 font-medium">Trombosi coronarica</p></div>
+                </div>
+                <p class="text-[0.6rem] text-white/30 mt-2">Frontiers Cardiovasc. Med. 2025 (137 casi fatali) · MDPI Int J Mol Sci 2025 · Circulation 2024 · JACC Case Reports 2025</p>
+            </div>
+
+            <div class="reveal text-center">
+                <p class="text-[0.6rem] text-white/25">Studi completi: EHJ 2025 · JAMA 2024 · Frontiers Cardiovasc. Med. 2025 · Circulation 2024 · JACC 2025 · MDPI 2025 · PMC 2025 · Medicina 2020 · Baggish 2017</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 6 — SCIENTIFIC VALIDATION: STIGMA
+         ═══════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="5">
+        <div class="slide-inner">
+            <p class="reveal text-xs text-gold/70 uppercase tracking-widest font-heading font-semibold mb-1">05 — Validazione Scientifica</p>
+            <h2 class="reveal font-heading text-2xl md:text-3xl font-bold text-white mb-1">Lo Stigma Sanitario</h2>
+            <p class="reveal text-sm text-white/50 mb-5">9 studi peer-reviewed (2015-2025) documentano la barriera d'accesso</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                <div class="reveal card">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-full bg-amber-500/15 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="user-x" class="w-5 h-5 text-amber-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-white font-medium mb-1">Non-disclosure dell'uso di AAS</p>
+                            <p class="text-xs text-white/60">La maggior parte dei 2,385 uomini intervistati <strong class="text-amber-300">non ha mai rivelato</strong> l'uso di AAS al medico. Motivazioni: paura del giudizio e sfiducia nella competenza.</p>
+                            <span class="source-tag peer-reviewed mt-2">Bonnecaze et al. 2020 — SAGE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal card">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-full bg-amber-500/15 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="message-circle-x" class="w-5 h-5 text-amber-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-white font-medium mb-1">Stigma peggiore dell'eroina</p>
+                            <p class="text-xs text-white/60">Lo stigma verso gli AAS è <strong class="text-amber-300">comparabile a quello verso droghe pesanti come l'eroina</strong>, barriera formidabile alle cure.</p>
+                            <span class="source-tag peer-reviewed mt-2">Griffiths et al. 2016 — SAGE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal card">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-full bg-amber-500/15 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="stethoscope" class="w-5 h-5 text-amber-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-white font-medium mb-1">Medici meno competenti dei coach</p>
+                            <p class="text-xs text-white/60">I medici ottengono il punteggio <strong class="text-amber-300">più basso</strong> su conoscenza AAS; coach e siti web sono valutati più affidabili.</p>
+                            <span class="source-tag peer-reviewed mt-2">Pope et al. 2004 — PubMed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal card">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-full bg-amber-500/15 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="shield-off" class="w-5 h-5 text-amber-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-white font-medium mb-1">"Non andrei mai dal medico a parlare di steroidi"</p>
+                            <p class="text-xs text-white/60">Gli utenti AAS <strong class="text-amber-300">anticipano lo stigma</strong> quando accedono a servizi sanitari, programmi di scambio siringhe e per eventi avversi.</p>
+                            <span class="source-tag peer-reviewed mt-2">Taylor & Francis 2024</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reveal text-center">
+                <p class="text-[0.6rem] text-white/25">Fonti addizionali: Dunn et al. 2015 · ScienceDirect 2024 (UK) · ScienceDirect 2022 (qualitative) · Subst. Abuse 2023 (Norvegia) · ScienceDirect 2025 (medici di base)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 7 — TAM / SAM / SOM
+         ═══════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="6">
+        <div class="slide-inner">
+            <p class="reveal text-xs text-gold/70 uppercase tracking-widest font-heading font-semibold mb-1">06 — Market Sizing</p>
+            <h2 class="reveal font-heading text-2xl md:text-3xl font-bold text-white mb-1">TAM / SAM / SOM</h2>
+            <p class="reveal text-sm text-white/50 mb-6">Stime conservative con metodologia bottom-up trasparente</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="reveal card text-center" style="border-color: rgba(200, 150, 62, 0.15);">
+                    <div class="w-24 h-24 rounded-full mx-auto mb-3 flex items-center justify-center" style="background: radial-gradient(circle, rgba(200,150,62,0.15) 0%, transparent 70%); border: 2px solid rgba(200,150,62,0.3);">
+                        <p class="text-xl font-heading font-extrabold text-gold">€150-200M</p>
+                    </div>
+                    <h3 class="font-heading text-sm font-bold text-white mb-1">TAM</h3>
+                    <p class="text-xs text-white/50">~5M iscritti palestre × €30-40/anno spesa media potenziale per servizi health digitali verticali</p>
+                    <div class="mt-2 flex flex-wrap justify-center gap-1">
+                        <span class="source-tag">Il Sole 24 Ore</span>
+                        <span class="source-tag">ISTAT 2024</span>
+                    </div>
+                </div>
+
+                <div class="reveal card text-center" style="border-color: rgba(200, 150, 62, 0.15);">
+                    <div class="w-24 h-24 rounded-full mx-auto mb-3 flex items-center justify-center" style="background: radial-gradient(circle, rgba(200,150,62,0.15) 0%, transparent 70%); border: 2px solid rgba(200,150,62,0.3);">
+                        <p class="text-xl font-heading font-extrabold text-gold">€30-50M</p>
+                    </div>
+                    <h3 class="font-heading text-sm font-bold text-white mb-1">SAM</h3>
+                    <p class="text-xs text-white/50">~500K strength athletes seri × €60-100/anno per pacchetti esami + consulti specialistici</p>
+                    <div class="mt-2 flex flex-wrap justify-center gap-1">
+                        <span class="source-tag">Benchmark EU</span>
+                        <span class="source-tag peer-reviewed">Sagoe 2014</span>
+                    </div>
+                </div>
+
+                <div class="reveal card text-center" style="border-color: rgba(200, 150, 62, 0.15);">
+                    <div class="w-24 h-24 rounded-full mx-auto mb-3 flex items-center justify-center" style="background: radial-gradient(circle, rgba(200,150,62,0.15) 0%, transparent 70%); border: 2px solid rgba(200,150,62,0.3);">
+                        <p class="text-xl font-heading font-extrabold text-gold">€1-3M</p>
+                    </div>
+                    <h3 class="font-heading text-sm font-bold text-white mb-1">SOM (Anno 3)</h3>
+                    <p class="text-xs text-white/50">5,000-15,000 utenti paganti × ~€200/anno valore medio pacchetto ponderato</p>
+                    <div class="mt-2 flex flex-wrap justify-center gap-1">
+                        <span class="source-tag">1-3% penetrazione SAM</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reveal mt-4 card" style="border-color: rgba(52, 211, 153, 0.15);">
+                <div class="flex items-start gap-3">
+                    <i data-lucide="trending-up" class="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                    <p class="text-xs text-white/70"><strong class="text-emerald-400">Potenziale upsell</strong>: Con conversione ai percorsi premium (€300-500/visita, €2-5K/percorso 6-12 mesi), il SOM può crescere significativamente a €5-10M+ con unit economics validate.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 8 — COMPETITIVE LANDSCAPE
+         ═══════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="7">
+        <div class="slide-inner">
+            <p class="reveal text-xs text-gold/70 uppercase tracking-widest font-heading font-semibold mb-1">07 — Landscape Competitivo</p>
+            <h2 class="reveal font-heading text-2xl md:text-3xl font-bold text-white mb-1">Chi C'è Sul Mercato</h2>
+            <p class="reveal text-sm text-white/50 mb-5">Nessun competitor verticale in Europa nel segmento performance-diagnostica</p>
+
+            <div class="reveal mb-4">
+                <h3 class="font-heading text-xs uppercase text-gold tracking-wider mb-3 font-semibold">Marketplace Healthcare Generalisti</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Azienda</th><th>Mercato</th><th>Valutazione</th><th>Revenue</th><th>Focus Italia</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-white font-medium">Doctolib</td>
+                            <td>FR, DE, IT, NL</td>
+                            <td class="text-gold">$6.4B</td>
+                            <td>$402.6M</td>
+                            <td class="text-amber-400 font-medium">Solo 2.6% ricavi</td>
+                        </tr>
+                        <tr>
+                            <td class="text-white font-medium">MioDottore</td>
+                            <td>IT / Europa</td>
+                            <td class="text-gold">Unicorn</td>
+                            <td>N/D (privata)</td>
+                            <td class="text-white/60">2.5M prenotazioni/mese</td>
+                        </tr>
+                        <tr>
+                            <td class="text-white font-medium">Zocdoc</td>
+                            <td>USA</td>
+                            <td class="text-gold">$1.8B</td>
+                            <td>$71M</td>
+                            <td class="text-white/40">Non presente</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="flex gap-2 mt-2">
+                    <span class="source-tag">GetLatka 2024</span>
+                    <span class="source-tag">Sifted 2024</span>
+                    <span class="source-tag">Crunchbase</span>
+                </div>
+            </div>
+
+            <div class="reveal mb-4">
+                <h3 class="font-heading text-xs uppercase text-gold tracking-wider mb-3 font-semibold">Nicchia Performance / Atleti di Forza</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Azienda</th><th>Mercato</th><th>Revenue</th><th>Gap vs SDF</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-white font-medium">Marek Health</td>
+                            <td>Solo USA</td>
+                            <td>~$18.7M/anno</td>
+                            <td class="text-white/60">No marketplace, no Europa</td>
+                        </tr>
+                        <tr>
+                            <td class="text-white font-medium">InsideTracker</td>
+                            <td>USA/Global</td>
+                            <td>N/D</td>
+                            <td class="text-white/60">Wellness generico, no strength</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <span class="source-tag mt-2">GrowJo</span>
+            </div>
+
+            <div class="reveal card" style="border-color: rgba(200, 150, 62, 0.2);">
+                <div class="flex items-start gap-3">
+                    <i data-lucide="target" class="w-4 h-4 text-gold flex-shrink-0 mt-0.5"></i>
+                    <p class="text-xs text-white/70"><strong class="text-gold">Insight</strong>: Doctolib genera solo il 2.6% dei ricavi in Italia (fase di "learning") e la sua strategia è focalizzata sulle farmacie. Il mercato italiano non ha un leader dominante e nessun player verticalizza su performance-diagnostica.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 9 — REGULATORY FRAMEWORK
+         ═══════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="8">
+        <div class="slide-inner">
+            <p class="reveal text-xs text-gold/70 uppercase tracking-widest font-heading font-semibold mb-1">08 — Framework Regolatorio</p>
+            <h2 class="reveal font-heading text-2xl md:text-3xl font-bold text-white mb-1">Contesto Normativo</h2>
+            <p class="reveal text-sm text-white/50 mb-5">SRL come struttura protettiva, EHDS come acceleratore di scala</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="reveal">
+                    <h3 class="font-heading text-xs uppercase text-gold tracking-wider mb-3 font-semibold">
+                        <i data-lucide="building-2" class="w-3.5 h-3.5 inline-block mr-1.5 -mt-0.5"></i>
+                        SRL vs STP
+                    </h3>
+                    <div class="space-y-2">
+                        <div class="card">
+                            <p class="text-xs text-emerald-400 font-medium mb-1">SRL — Scelta corretta</p>
+                            <p class="text-xs text-white/60">Limita responsabilità ai servizi piattaforma. I medici operano come professionisti indipendenti. Modello Doctolib/MioDottore.</p>
+                        </div>
+                        <div class="card">
+                            <p class="text-xs text-white/60 mb-1"><strong class="text-white">Normativa di riferimento:</strong></p>
+                            <ul class="text-[0.65rem] text-white/50 space-y-1">
+                                <li>• Legge 183/2011 art. 10 — Introduzione STP</li>
+                                <li>• D.M. 34/2013 — Regolamento STP</li>
+                                <li>• Legge 24/2017 (Gelli-Bianco) — Responsabilità sanitaria</li>
+                                <li>• D.M. 232/2023 — Standard minimi strutture sanitarie</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <h3 class="font-heading text-xs uppercase text-gold tracking-wider mb-3 font-semibold">
+                        <i data-lucide="globe" class="w-3.5 h-3.5 inline-block mr-1.5 -mt-0.5"></i>
+                        EHDS & Telemedicina
+                    </h3>
+                    <div class="space-y-2">
+                        <div class="card">
+                            <p class="text-xs text-blue-400 font-medium mb-1">EHDS — Reg. UE 2025/327</p>
+                            <p class="text-xs text-white/60">In vigore dal 26/03/2025. Framework per interoperabilità transfrontaliera dei dati sanitari → facilita espansione EU.</p>
+                        </div>
+                        <div class="card">
+                            <p class="text-xs text-white/60 mb-1"><strong class="text-white">Timeline EHDS:</strong></p>
+                            <ul class="text-[0.65rem] text-white/50 space-y-1">
+                                <li>• Giu 2025: Autorità Nazionale Salute Digitale</li>
+                                <li>• Gen 2026: Certificazione sistemi EHR</li>
+                                <li>• Mar 2029: Piena applicazione scambio dati</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <p class="text-xs text-white/60 mb-1"><strong class="text-white">Telemedicina Italia:</strong></p>
+                            <p class="text-[0.65rem] text-white/50">PNT operativa da fine 2025. D.Lgs. 138/2024 (NIS2) impone cybersecurity adeguata per soggetti sanitari.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reveal mt-3 text-center">
+                <div class="flex gap-2 justify-center flex-wrap">
+                    <span class="source-tag">EUR-Lex</span>
+                    <span class="source-tag">European Commission</span>
+                    <span class="source-tag">ICLG 2025-2026</span>
+                    <span class="source-tag">Portolano Cavallo</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 10 — FUTURE TRENDS (with charts)
+         ═══════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="9">
+        <div class="slide-inner">
+            <p class="reveal text-xs text-gold/70 uppercase tracking-widest font-heading font-semibold mb-1">09 — Prospettive Future</p>
+            <h2 class="reveal font-heading text-2xl md:text-3xl font-bold text-white mb-1">Trend di Mercato</h2>
+            <p class="reveal text-sm text-white/50 mb-5">I macro-trend che alimentano la crescita della health-tech verticale</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="reveal">
+                    <div class="chart-container" style="max-width: 100%; height: 280px;">
+                        <canvas id="trendsChart"></canvas>
+                    </div>
+                </div>
+                <div class="reveal space-y-3">
+                    <div class="card">
+                        <div class="flex items-baseline justify-between mb-1">
+                            <p class="text-xs text-white font-medium">Precision Medicine</p>
+                            <p class="text-xs text-gold font-heading font-bold">CAGR 13.6%</p>
+                        </div>
+                        <p class="text-[0.65rem] text-white/50">$125.7B (2026) → $237.3B (2031)</p>
+                        <div class="progress-bar mt-2"><div class="progress-bar-fill bg-gold" style="width: 75%"></div></div>
+                        <span class="source-tag mt-2">Mordor Intelligence 2026</span>
+                    </div>
+                    <div class="card">
+                        <div class="flex items-baseline justify-between mb-1">
+                            <p class="text-xs text-white font-medium">Healthcare Predictive Analytics</p>
+                            <p class="text-xs text-gold font-heading font-bold">CAGR 24.7%</p>
+                        </div>
+                        <p class="text-[0.65rem] text-white/50">$16.7B (2025) → $50.4B (2030)</p>
+                        <div class="progress-bar mt-2"><div class="progress-bar-fill bg-emerald-500" style="width: 90%"></div></div>
+                        <span class="source-tag mt-2">GlobeNewsWire 2026</span>
+                    </div>
+                    <div class="card">
+                        <div class="flex items-baseline justify-between mb-1">
+                            <p class="text-xs text-white font-medium">Smart Wearables</p>
+                            <p class="text-xs text-gold font-heading font-bold">CAGR 17.8%</p>
+                        </div>
+                        <p class="text-[0.65rem] text-white/50">$29.6B (2025) → $123.9B (2034)</p>
+                        <div class="progress-bar mt-2"><div class="progress-bar-fill bg-blue-500" style="width: 82%"></div></div>
+                        <span class="source-tag mt-2">GlobeNewsWire 2026</span>
+                    </div>
+                    <div class="card">
+                        <div class="flex items-baseline justify-between mb-1">
+                            <p class="text-xs text-white font-medium">Preventive Medicine</p>
+                            <p class="text-xs text-gold font-heading font-bold">CAGR 4.6%</p>
+                        </div>
+                        <p class="text-[0.65rem] text-white/50">$407.3B (2025) → $556.5B (2032)</p>
+                        <div class="progress-bar mt-2"><div class="progress-bar-fill bg-violet-500" style="width: 40%"></div></div>
+                        <span class="source-tag mt-2">Coherent Market Insights</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 11 — SWOT ANALYSIS
+         ═══════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="10">
+        <div class="slide-inner">
+            <p class="reveal text-xs text-gold/70 uppercase tracking-widest font-heading font-semibold mb-1">10 — Analisi Strategica</p>
+            <h2 class="reveal font-heading text-2xl md:text-3xl font-bold text-white mb-5">SWOT Analysis</h2>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div class="reveal swot-cell" style="background: rgba(52, 211, 153, 0.08); border: 1px solid rgba(52, 211, 153, 0.2); border-radius: 12px;">
+                    <h4 class="text-emerald-400">
+                        <i data-lucide="check-circle" class="w-3.5 h-3.5 inline-block mr-1 -mt-0.5"></i>
+                        Strengths
+                    </h4>
+                    <ul class="space-y-1">
+                        <li>First mover in Europa nella nicchia</li>
+                        <li>Bisogno validato da 21+ studi peer-reviewed</li>
+                        <li>Storia personale del founder (autenticità)</li>
+                        <li>Struttura SRL protettiva (modello Doctolib)</li>
+                        <li>Asset-light: coordina, non possiede</li>
+                    </ul>
+                </div>
+
+                <div class="reveal swot-cell" style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 12px;">
+                    <h4 class="text-red-400">
+                        <i data-lucide="alert-circle" class="w-3.5 h-3.5 inline-block mr-1 -mt-0.5"></i>
+                        Weaknesses
+                    </h4>
+                    <ul class="space-y-1">
+                        <li>Team da completare e validare</li>
+                        <li>Dipendenza da professionisti esterni</li>
+                        <li>Complessità regolatoria sanitaria</li>
+                        <li>Mercato italiano frammentato</li>
+                        <li>No traction verificabile ancora</li>
+                    </ul>
+                </div>
+
+                <div class="reveal swot-cell" style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 12px;">
+                    <h4 class="text-blue-400">
+                        <i data-lucide="rocket" class="w-3.5 h-3.5 inline-block mr-1 -mt-0.5"></i>
+                        Opportunities
+                    </h4>
+                    <ul class="space-y-1">
+                        <li>Digital health Italia: CAGR 13.6%</li>
+                        <li>5M+ iscritti palestre, mercato in crescita</li>
+                        <li>EHDS (Reg. UE 2025/327) per scala EU</li>
+                        <li>Nessun competitor verticale in Europa</li>
+                        <li>AI/predictive analytics CAGR 24.7%</li>
+                        <li>60% consumatori priorità aging sano (McKinsey)</li>
+                    </ul>
+                </div>
+
+                <div class="reveal swot-cell" style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.2); border-radius: 12px;">
+                    <h4 class="text-amber-400">
+                        <i data-lucide="shield-alert" class="w-3.5 h-3.5 inline-block mr-1 -mt-0.5"></i>
+                        Threats
+                    </h4>
+                    <ul class="space-y-1">
+                        <li>Regolamentazione sanitaria stringente</li>
+                        <li>Possibile ingresso di Doctolib/MioDottore nella nicchia</li>
+                        <li>Rischio reputazionale legato a PED</li>
+                        <li>Resistenza culturale medici tradizionali</li>
+                        <li>Necessità di compliance GDPR e NIS2</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 12 — TECHNOLOGY ROADMAP
+         ═══════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="11">
+        <div class="slide-inner">
+            <p class="reveal text-xs text-gold/70 uppercase tracking-widest font-heading font-semibold mb-1">11 — Evoluzione Tecnologica</p>
+            <h2 class="reveal font-heading text-2xl md:text-3xl font-bold text-white mb-1">Roadmap Plausibile</h2>
+            <p class="reveal text-sm text-white/50 mb-6">Da marketplace a piattaforma AI-driven — la traiettoria naturale</p>
+
+            <div class="reveal space-y-3">
+                <div class="flex gap-4 items-start">
+                    <div class="flex-shrink-0 w-20 text-right">
+                        <p class="text-xs text-gold font-heading font-bold">Fase 1</p>
+                        <p class="text-[0.6rem] text-white/30">Attuale</p>
+                    </div>
+                    <div class="flex-shrink-0 flex flex-col items-center">
+                        <div class="w-3 h-3 rounded-full bg-gold"></div>
+                        <div class="w-0.5 h-12 bg-gold/20"></div>
+                    </div>
+                    <div class="card flex-1">
+                        <p class="text-sm text-white font-medium">Marketplace</p>
+                        <p class="text-xs text-white/50">Connessione atleti ↔ medici/lab/infermieri. Pannelli esami pre-validati.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 items-start">
+                    <div class="flex-shrink-0 w-20 text-right">
+                        <p class="text-xs text-gold font-heading font-bold">Fase 2</p>
+                        <p class="text-[0.6rem] text-white/30">6-12 mesi</p>
+                    </div>
+                    <div class="flex-shrink-0 flex flex-col items-center">
+                        <div class="w-3 h-3 rounded-full bg-gold/60"></div>
+                        <div class="w-0.5 h-12 bg-gold/20"></div>
+                    </div>
+                    <div class="card flex-1">
+                        <p class="text-sm text-white font-medium">Dashboard Dati</p>
+                        <p class="text-xs text-white/50">Centralizzazione cartelle cliniche, storico esami, trend biomarker nel tempo.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 items-start">
+                    <div class="flex-shrink-0 w-20 text-right">
+                        <p class="text-xs text-gold font-heading font-bold">Fase 3</p>
+                        <p class="text-[0.6rem] text-white/30">12-24 mesi</p>
+                    </div>
+                    <div class="flex-shrink-0 flex flex-col items-center">
+                        <div class="w-3 h-3 rounded-full bg-gold/40"></div>
+                        <div class="w-0.5 h-12 bg-gold/20"></div>
+                    </div>
+                    <div class="card flex-1">
+                        <p class="text-sm text-white font-medium">AI-Powered Insights</p>
+                        <p class="text-xs text-white/50">Analisi predittiva su serie temporali di biomarker. Alert automatici. Raccomandazioni personalizzate. <span class="text-gold/80">Mercato predictive analytics: CAGR 24.7%</span></p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 items-start">
+                    <div class="flex-shrink-0 w-20 text-right">
+                        <p class="text-xs text-gold font-heading font-bold">Fase 4</p>
+                        <p class="text-[0.6rem] text-white/30">24-36 mesi</p>
+                    </div>
+                    <div class="flex-shrink-0 flex flex-col items-center">
+                        <div class="w-3 h-3 rounded-full bg-gold/25"></div>
+                        <div class="w-0.5 h-12 bg-gold/20"></div>
+                    </div>
+                    <div class="card flex-1">
+                        <p class="text-sm text-white font-medium">SaaS B2B</p>
+                        <p class="text-xs text-white/50">Vendita della piattaforma a cliniche e professionisti come strumento gestionale specializzato.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 items-start">
+                    <div class="flex-shrink-0 w-20 text-right">
+                        <p class="text-xs text-gold font-heading font-bold">Fase 5</p>
+                        <p class="text-[0.6rem] text-white/30">36+ mesi</p>
+                    </div>
+                    <div class="flex-shrink-0 flex flex-col items-center">
+                        <div class="w-3 h-3 rounded-full bg-gold/15"></div>
+                    </div>
+                    <div class="card flex-1">
+                        <p class="text-sm text-white font-medium">Espansione Internazionale</p>
+                        <p class="text-xs text-white/50">Facilitata dall'EHDS per interoperabilità dati sanitari UE. Europa Sud come primo mercato.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 13 — SOURCES OVERVIEW
+         ═══════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="12">
+        <div class="slide-inner">
+            <p class="reveal text-xs text-gold/70 uppercase tracking-widest font-heading font-semibold mb-1">12 — Bibliografia</p>
+            <h2 class="reveal font-heading text-2xl md:text-3xl font-bold text-white mb-5">Fonti e Riferimenti</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="reveal">
+                    <h3 class="font-heading text-xs uppercase text-emerald-400 tracking-wider mb-2 font-semibold">Peer-Reviewed — Rischi Cardiaci (8)</h3>
+                    <div class="space-y-1 text-[0.6rem] text-white/50">
+                        <p>1. Vecchiato et al. (2025) — European Heart Journal</p>
+                        <p>2. Windfeld-Mathiasen/Horwitz (2024) — JAMA</p>
+                        <p>3. Frontiers Cardiovasc. Med. (2025)</p>
+                        <p>4. Circulation (2024)</p>
+                        <p>5. JACC Case Reports (2025)</p>
+                        <p>6. MDPI Int J Mol Sci (2025)</p>
+                        <p>7. PMC Narrative Review (2025)</p>
+                        <p>8. Baggish et al. (2017)</p>
+                    </div>
+
+                    <h3 class="font-heading text-xs uppercase text-emerald-400 tracking-wider mt-4 mb-2 font-semibold">Peer-Reviewed — Stigma (9)</h3>
+                    <div class="space-y-1 text-[0.6rem] text-white/50">
+                        <p>9. Dunn et al. (2015) — PubMed</p>
+                        <p>10. Bonnecaze et al. (2020) — SAGE</p>
+                        <p>11. Pope et al. (2004) — PubMed</p>
+                        <p>12. Griffiths et al. (2016) — SAGE</p>
+                        <p>13. Taylor & Francis (2024)</p>
+                        <p>14. Subst. Abuse (2023, Norvegia)</p>
+                        <p>15. ScienceDirect (2024, UK)</p>
+                        <p>16. ScienceDirect (2025, medici)</p>
+                        <p>17. ScienceDirect (2022, qualitative UK)</p>
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <h3 class="font-heading text-xs uppercase text-emerald-400 tracking-wider mb-2 font-semibold">Peer-Reviewed — Epidemiologia (4)</h3>
+                    <div class="space-y-1 text-[0.6rem] text-white/50">
+                        <p>18. Sagoe et al. (2014) — Annals of Epidemiology</p>
+                        <p>19. Abrahin et al. (2024) — BMC Public Health</p>
+                        <p>20. ScienceDirect (2025) — Systematic Review</p>
+                        <p>21. Council of Europe (2024)</p>
+                    </div>
+
+                    <h3 class="font-heading text-xs uppercase text-gold tracking-wider mt-4 mb-2 font-semibold">Report di Mercato (7)</h3>
+                    <div class="space-y-1 text-[0.6rem] text-white/50">
+                        <p>22. Fortune Business Insights — Digital Health</p>
+                        <p>23. Grand View Research — Telemedicina IT</p>
+                        <p>24. Mordor Intelligence — Precision Medicine</p>
+                        <p>25. Coherent Market Insights — Preventive Med.</p>
+                        <p>26. IMARC Group — Fitness Italia</p>
+                        <p>27. Market Research Future — Digital Health IT</p>
+                        <p>28. GlobeNewsWire — Predictive Analytics</p>
+                    </div>
+
+                    <h3 class="font-heading text-xs uppercase text-blue-400 tracking-wider mt-4 mb-2 font-semibold">Istituzionali & Normative (5)</h3>
+                    <div class="space-y-1 text-[0.6rem] text-white/50">
+                        <p>29. European Commission — EHDS</p>
+                        <p>30. EUR-Lex — Reg. UE 2025/327</p>
+                        <p>31. ICLG — Digital Health Laws Italy</p>
+                        <p>32. ISTAT — Pratica Sportiva 2024</p>
+                        <p>33. Garante Privacy — Piattaforme</p>
+                    </div>
+
+                    <h3 class="font-heading text-xs uppercase text-white/40 tracking-wider mt-4 mb-2 font-semibold">Industry & Competitor (7)</h3>
+                    <div class="space-y-1 text-[0.6rem] text-white/50">
+                        <p>34-40. GetLatka, Sifted, Crunchbase, GrowJo, Il Sole 24 Ore, Athletech News, McKinsey</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 14 — CLOSING
+         ═══════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="13">
+        <div class="slide-inner text-center">
+            <div class="reveal mb-6">
+                <i data-lucide="shield-check" class="w-10 h-10 text-gold mx-auto mb-4"></i>
+                <h2 class="font-heading text-3xl md:text-4xl font-extrabold text-white mb-3">Key Takeaways</h2>
+            </div>
+
+            <div class="reveal grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-left">
+                <div class="card" style="border-color: rgba(52, 211, 153, 0.2);">
+                    <div class="text-2xl font-heading font-extrabold text-emerald-400 mb-2">01</div>
+                    <p class="text-sm text-white font-medium mb-1">Bisogno Validato</p>
+                    <p class="text-xs text-white/50">21 studi peer-reviewed (2015-2025) confermano rischio cardiaco e stigma sanitario come problemi reali e documentati.</p>
+                </div>
+                <div class="card" style="border-color: rgba(200, 150, 62, 0.2);">
+                    <div class="text-2xl font-heading font-extrabold text-gold mb-2">02</div>
+                    <p class="text-sm text-white font-medium mb-1">Mercato Aperto</p>
+                    <p class="text-xs text-white/50">Zero competitor verticali in Europa. Italia non presidiata (Doctolib = 2.6% ricavi). Digital health in crescita 13.6% annuo.</p>
+                </div>
+                <div class="card" style="border-color: rgba(59, 130, 246, 0.2);">
+                    <div class="text-2xl font-heading font-extrabold text-blue-400 mb-2">03</div>
+                    <p class="text-sm text-white font-medium mb-1">Prospettive Solide</p>
+                    <p class="text-xs text-white/50">EHDS facilita scala EU. AI predictive analytics +24.7% CAGR. Precision medicine +13.6%. I trend convergono verso il modello SDF.</p>
+                </div>
+            </div>
+
+            <div class="reveal">
+                <div class="h-px w-24 bg-gold/30 mx-auto mb-4"></div>
+                <p class="text-lg font-heading font-bold text-gold">Salute Di Ferro</p>
+                <p class="text-sm text-white/40 mt-1">Analisi di Mercato & Prospettive — Febbraio 2026</p>
+                <p class="text-xs text-white/20 mt-3">40+ fonti verificate · 21 studi peer-reviewed · Tutti i dati cross-verificati al 26/02/2026</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div id="nav"></div>
+<div id="slide-counter"></div>
+
+<!-- Mobile nav arrows -->
+<div id="mobile-nav" style="display:none; position:fixed; bottom:3.5rem; left:0; right:0; z-index:100; justify-content:center; gap:1rem;">
+    <button id="btn-prev" style="width:44px; height:44px; border-radius:50%; background:rgba(11,29,46,0.9); border:1px solid rgba(255,255,255,0.15); color:#C8963E; font-size:1.2rem; display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(8px);">&larr;</button>
+    <button id="btn-next" style="width:44px; height:44px; border-radius:50%; background:rgba(11,29,46,0.9); border:1px solid rgba(255,255,255,0.15); color:#C8963E; font-size:1.2rem; display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(8px);">&rarr;</button>
+</div>
+
+<script>
+    // ═══════════════════════════════════
+    // SLIDE ENGINE
+    // ═══════════════════════════════════
+    const slides = document.querySelectorAll('.slide');
+    const total = slides.length;
+    let current = 0;
+    let transitioning = false;
+
+    function goTo(n) {
+        if (transitioning || n === current || n < 0 || n >= total) return;
+        transitioning = true;
+        slides[current].classList.remove('active');
+        current = n;
+        slides[current].classList.add('active');
+        updateNav();
+        setTimeout(() => transitioning = false, 650);
+    }
+
+    function next() { goTo(current + 1); }
+    function prev() { goTo(current - 1); }
+
+    // Build navigation dots
+    const nav = document.getElementById('nav');
+    for (let i = 0; i < total; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', () => goTo(i));
+        nav.appendChild(dot);
+    }
+
+    function updateNav() {
+        nav.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+        document.getElementById('slide-counter').textContent = `${current + 1} / ${total}`;
+    }
+    updateNav();
+
+    // Keyboard
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); next(); }
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prev(); }
+        if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+        if (e.key === 'End') { e.preventDefault(); goTo(total - 1); }
+        if (e.key === 'f' || e.key === 'F') {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else document.exitFullscreen();
+        }
+    });
+
+    // Touch — horizontal swipe with vertical dead zone
+    let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
+    document.addEventListener('touchstart', e => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+    }, { passive: true });
+    document.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        const dt = Date.now() - touchStartTime;
+        // Only trigger slide change on clear horizontal swipe (faster than 500ms, >60px, and mostly horizontal)
+        if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 2 && dt < 500) {
+            dx < 0 ? next() : prev();
+            // Scroll to top of new slide on mobile
+            if (window.innerWidth <= 768) window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, { passive: true });
+
+    // Scroll / wheel — only on desktop (non-touch)
+    let scrollTimeout;
+    const isMobile = () => window.innerWidth <= 768;
+    document.addEventListener('wheel', e => {
+        if (isMobile()) return; // let native scroll work on mobile
+        e.preventDefault();
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => { e.deltaY > 0 ? next() : prev(); }, 50);
+    }, { passive: false });
+
+    // ═══════════════════════════════════
+    // CHART.JS — Trends
+    // ═══════════════════════════════════
+    function initChart() {
+        const ctx = document.getElementById('trendsChart');
+        if (!ctx) return;
+        new Chart(ctx.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['Precision\nMedicine', 'Predictive\nAnalytics', 'Smart\nWearables', 'Preventive\nMedicine', 'Digital Health\nItalia'],
+                datasets: [
+                    {
+                        label: 'Valore Attuale ($B)',
+                        data: [125.7, 16.7, 29.6, 407.3, 7.38],
+                        backgroundColor: 'rgba(200, 150, 62, 0.6)',
+                        borderColor: 'rgba(200, 150, 62, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                    },
+                    {
+                        label: 'CAGR %',
+                        data: [13.6, 24.7, 17.8, 4.6, 13.6],
+                        backgroundColor: 'rgba(52, 211, 153, 0.6)',
+                        borderColor: 'rgba(52, 211, 153, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        yAxisID: 'y1',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: 'rgba(255,255,255,0.5)', font: { size: 10, family: 'Inter' } }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 9 } },
+                        grid: { color: 'rgba(255,255,255,0.05)' }
+                    },
+                    y: {
+                        position: 'left',
+                        ticks: { color: 'rgba(200, 150, 62, 0.6)', font: { size: 9 }, callback: v => '$' + v + 'B' },
+                        grid: { color: 'rgba(255,255,255,0.05)' }
+                    },
+                    y1: {
+                        position: 'right',
+                        ticks: { color: 'rgba(52, 211, 153, 0.6)', font: { size: 9 }, callback: v => v + '%' },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    }
+
+    // Mobile nav arrows
+    function setupMobileNav() {
+        const mobileNav = document.getElementById('mobile-nav');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        if (!mobileNav) return;
+
+        function updateMobileNav() {
+            if (window.innerWidth <= 768) {
+                mobileNav.style.display = 'flex';
+            } else {
+                mobileNav.style.display = 'none';
+            }
+        }
+
+        btnPrev.addEventListener('click', () => { prev(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+        btnNext.addEventListener('click', () => { next(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+        updateMobileNav();
+        window.addEventListener('resize', updateMobileNav);
+    }
+
+    // Init chart, Lucide icons, and mobile nav
+    window.addEventListener('DOMContentLoaded', () => {
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+        initChart();
+        setupMobileNav();
+    });
+</script>
+
+</body>
+</html>
