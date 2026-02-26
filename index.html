@@ -288,7 +288,7 @@
                 transform: none;
                 transition: none;
                 overflow: visible;
-                min-height: 100vh;
+                min-height: auto;
                 height: auto;
                 align-items: flex-start;
             }
@@ -298,8 +298,9 @@
             }
 
             .slide-inner {
-                padding: 1.5rem 1rem 5rem;
+                padding: 1.5rem 1rem 4rem;
                 max-width: 100%;
+                padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
             }
 
             /* Stack all grids to single column */
@@ -333,8 +334,9 @@
             .data-table tbody,
             .data-table tr {
                 display: table;
-                width: 100%;
-                table-layout: fixed;
+                width: max-content;
+                min-width: 100%;
+                table-layout: auto;
             }
             .data-table th, .data-table td {
                 padding: 0.4rem 0.5rem;
@@ -342,21 +344,26 @@
                 white-space: nowrap;
             }
 
-            /* Bigger touch targets for nav */
+            /* Hide dot nav and counter on mobile — use arrow bar instead */
             #nav {
-                bottom: 0.75rem;
-                padding: 8px 16px;
-                gap: 10px;
+                display: none !important;
             }
-            .dot {
-                width: 10px;
-                height: 10px;
+            #slide-counter {
+                display: none !important;
             }
 
-            #slide-counter {
-                bottom: 0.75rem;
-                right: 1rem;
-                font-size: 0.65rem;
+            /* Mobile nav bar */
+            #mobile-nav {
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                padding: 0.6rem 1.25rem !important;
+                background: rgba(11, 29, 46, 0.95) !important;
+                border-top: 1px solid rgba(255,255,255,0.08) !important;
+                backdrop-filter: blur(12px) !important;
+                -webkit-backdrop-filter: blur(12px) !important;
+                gap: 0 !important;
+                justify-content: space-between !important;
             }
 
             /* Typography adjustments */
@@ -1300,10 +1307,11 @@
 <div id="nav"></div>
 <div id="slide-counter"></div>
 
-<!-- Mobile nav arrows -->
-<div id="mobile-nav" style="display:none; position:fixed; bottom:3.5rem; left:0; right:0; z-index:100; justify-content:center; gap:1rem;">
-    <button id="btn-prev" style="width:44px; height:44px; border-radius:50%; background:rgba(11,29,46,0.9); border:1px solid rgba(255,255,255,0.15); color:#C8963E; font-size:1.2rem; display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(8px);">&larr;</button>
-    <button id="btn-next" style="width:44px; height:44px; border-radius:50%; background:rgba(11,29,46,0.9); border:1px solid rgba(255,255,255,0.15); color:#C8963E; font-size:1.2rem; display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(8px);">&rarr;</button>
+<!-- Mobile nav bar -->
+<div id="mobile-nav" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:100; align-items:center; justify-content:space-between; padding:0.6rem 1.25rem; background:rgba(11,29,46,0.95); border-top:1px solid rgba(255,255,255,0.08); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);">
+    <button id="btn-prev" style="width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#C8963E; font-size:1.1rem; display:flex; align-items:center; justify-content:center; cursor:pointer;">&larr;</button>
+    <span id="mobile-counter" style="font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:0.75rem; color:rgba(255,255,255,0.4); letter-spacing:0.08em;"></span>
+    <button id="btn-next" style="width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#C8963E; font-size:1.1rem; display:flex; align-items:center; justify-content:center; cursor:pointer;">&rarr;</button>
 </div>
 
 <script>
@@ -1340,6 +1348,8 @@
     function updateNav() {
         nav.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
         document.getElementById('slide-counter').textContent = `${current + 1} / ${total}`;
+        const mc = document.getElementById('mobile-counter');
+        if (mc) mc.textContent = `${current + 1} / ${total}`;
     }
     updateNav();
 
